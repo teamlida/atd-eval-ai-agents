@@ -21,6 +21,7 @@ give it a tool, and then learn how to **evaluate** it.
 - [Part 2 — One-time setup](#part-2--one-time-setup-do-this-before-the-workshop)
 - [Part 3 — During the workshop](#part-3--during-the-workshop)
   - [Run evaluations](#run-evaluations)
+- [Challenge: The Unicorn & Parrot](#challenge-the-unicorn--parrot-)
 - [Troubleshooting](#troubleshooting)
 
 ---
@@ -445,6 +446,107 @@ which eval cases **passed** and which **failed**, with their scores.
 
 > Getting `429` / `RESOURCE_EXHAUSTED`? See [T7](#t7-429--resource_exhausted--quota-errors).
 
+---
+
+# Challenge: The Unicorn & Parrot 🍺
+
+Welcome to **The Unicorn & Parrot**, a pub in Potsdam. Its bartender, **Polly** the parrot,
+is a chatbot that takes drink orders. Polly has bugs. Your job is to find them and
+prove them with evals.
+
+**👉 The pub's page: <https://teamlida.github.io/atd-eval-ai-agents/>**
+
+The page has the menu, the house rules and the register's tools, plus a register you can try
+yourself. **The page is always right.** Whenever Polly says or does something that
+doesn't match it, you've found a bug.
+
+### Your mission
+
+Find **at least 4 bugs** and cover **each one with an eval that fails**:
+
+- **2 deterministic evals**: checked exactly, with `tool_trajectory_avg_score`
+  (did Polly call the right tools with the right inputs?) or `response_match_score`.
+- **2 non-deterministic evals**: checked by an LLM judge, with
+  `rubric_based_final_response_quality_v1` (does the answer follow a rule you write?).
+
+> An eval that catches a bug **fails**. That's the goal! If your eval passes, either
+> the bug isn't there, or the eval doesn't check what you think it checks.
+
+### Set up
+
+From the workshop folder, with `(.venv)` showing:
+
+```bash
+git checkout -f challenge
+```
+
+Give Polly your API key by copying the `.env` file you made for `my_agent`:
+
+- macOS / Linux: `cp my_agent/.env beer_agent/.env`
+- Windows: `Copy-Item my_agent\.env beer_agent\.env`
+
+Then start the web interface and pick **`beer_agent`** in the top-left dropdown:
+
+```bash
+adk web --port 8000
+```
+
+### Find a bug
+
+1. Read a house rule on the pub page.
+2. Try to make Polly break it in the chat.
+3. Click the events on the left of `adk web` to see which tools Polly called, with which
+   inputs, and what the register answered. Compare with the page.
+
+### Turn the bug into an eval
+
+The quickest way is to record the conversation where the bug happened:
+
+1. In `adk web`, open the **Eval** tab and create a new eval set, for example `test`.
+2. Reproduce the bug in a **new session**, then click **Add current session** to `test`.
+   ADK saves it to `beer_agent/test.evalset.json`.
+3. ⚠️ **The recorded case expects exactly what Polly did, bug included.** Open the file in
+   VS Code and correct the expectation:
+   - **Deterministic:** fix the `function_call` entries (tool `name` and `args`) to what
+     Polly *should* have called, or the `final_response` text to what he should have said.
+   - **Non-deterministic:** leave the case as it is. The rubric in the config does the checking.
+4. Create a config for your eval in `beer_agent/`, for example `trajectory_config.json`:
+
+   ```json
+   { "criteria": { "tool_trajectory_avg_score": 1.0 } }
+   ```
+
+   or, for an LLM judge, `rubric_config.json`, with a rule from the pub page in your own words:
+
+   ```json
+   {
+     "criteria": {
+       "rubric_based_final_response_quality_v1": {
+         "threshold": 0.8,
+         "judge_model_options": { "judge_model": "gemini-3.5-flash-lite", "num_samples": 1 },
+         "rubrics": [
+           {
+             "rubric_id": "my_rule",
+             "rubric_content": { "text_property": "Write the rule the answer must follow here." }
+           }
+         ]
+       }
+     }
+   }
+   ```
+
+5. Run **only your new case**: add `:` and the case's `eval_id` to the file name.
+
+   ```bash
+   adk eval beer_agent beer_agent/test.evalset.json:<eval_id> --config_file_path beer_agent/trajectory_config.json --print_detailed_results
+   ```
+
+> 💡 Some bugs only show up some of the time. Add `--num_runs 3` to run a case
+> several times.
+>
+> 💡 Free API keys allow about 15 requests per minute, and every chat message or eval
+> run uses a few. If you hit `429`, wait a minute: that's a quota, not a bug. 
+> Reach out to us and we will help.
 
 ---
 

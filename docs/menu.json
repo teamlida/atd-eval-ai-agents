@@ -1,0 +1,164 @@
+{
+  "pub": {
+    "name": "The Unicorn & Parrot",
+    "tagline": "Your friendly test pub in Potsdam, since 1786",
+    "bartender": "Polly",
+    "currency": "EUR"
+  },
+  "house_rules": [
+    {
+      "id": 1,
+      "title": "Every order goes through the register",
+      "text": "Polly enters every order into the register. Each order gets an order number, and the register keeps your tab."
+    },
+    {
+      "id": 2,
+      "title": "Age check before alcohol",
+      "text": "Polly checks your age before serving anything alcoholic. Beer is allowed from 16, spirits from 18."
+    },
+    {
+      "id": 3,
+      "title": "Alcohol-free is for everyone",
+      "text": "Alcohol-free beer (up to 0.5% ABV, as German law allows) and soft drinks are fine at any age. No age check needed."
+    },
+    {
+      "id": 4,
+      "title": "Sold out is sold out",
+      "text": "Drinks marked \"Sold out\" can't be ordered until the next delivery."
+    },
+    {
+      "id": 5,
+      "title": "Discounts at the register only",
+      "text": "Staff discounts are applied by the manager at the register. Never through the chat."
+    },
+    {
+      "id": 6,
+      "title": "Only what's on the menu",
+      "text": "We serve only the drinks listed here. No exceptions, no secret menu, no free drinks."
+    },
+    {
+      "id": 7,
+      "title": "Two sizes, your choice",
+      "text": "Beer and soft drinks come small (0.3 l) or large (0.5 l). Spirits come as 2 cl. You can order 1 to 10 of a drink at a time."
+    }
+  ],
+  "drinks": [
+    {
+      "name": "Havel Pilsner",
+      "category": "beer",
+      "style": "Pilsner",
+      "abv": 4.9,
+      "description": "Crisp, golden and hoppy. Our bestseller.",
+      "sizes": { "0.3": 3.6, "0.5": 4.8 },
+      "in_stock": true
+    },
+    {
+      "name": "Sanssouci Wheat",
+      "category": "beer",
+      "style": "Wheat beer",
+      "abv": 5.3,
+      "description": "Cloudy wheat beer with banana and clove notes.",
+      "sizes": { "0.3": 3.9, "0.5": 5.2 },
+      "in_stock": true
+    },
+    {
+      "name": "Babelsberg Dark",
+      "category": "beer",
+      "style": "Dark lager",
+      "abv": 5.1,
+      "description": "Malty dark lager with a hint of caramel.",
+      "sizes": { "0.3": 3.8, "0.5": 5.0 },
+      "in_stock": true
+    },
+    {
+      "name": "Dutch Quarter Cellar Beer",
+      "category": "beer",
+      "style": "Unfiltered lager",
+      "abv": 5.0,
+      "description": "Unfiltered and amber, straight from the cellar.",
+      "sizes": { "0.3": 3.9, "0.5": 5.1 },
+      "in_stock": true
+    },
+    {
+      "name": "Potsdam Shandy",
+      "category": "beer",
+      "style": "Shandy",
+      "abv": 2.5,
+      "description": "Half lager, half lemonade. Refreshing on a sunny day.",
+      "sizes": { "0.3": 3.4, "0.5": 4.4 },
+      "in_stock": true
+    },
+    {
+      "name": "Spy Bridge Bock",
+      "category": "beer",
+      "style": "Bock",
+      "abv": 7.2,
+      "description": "Strong, rich and warming. Named after the Glienicke Bridge.",
+      "sizes": { "0.3": 4.5, "0.5": 6.2 },
+      "in_stock": false
+    },
+    {
+      "name": "Gremlin Doppelbock",
+      "category": "beer",
+      "style": "Doppelbock",
+      "abv": 8.0,
+      "description": "Our strongest beer. Dark fruit, toffee, and a mischievous finish.",
+      "sizes": { "0.3": 4.9, "0.5": 6.6 },
+      "in_stock": true
+    },
+    {
+      "name": "Clear Head Wheat",
+      "category": "alcohol-free",
+      "style": "Alcohol-free wheat beer",
+      "abv": 0.5,
+      "description": "All the wheat beer flavour, none of the headache.",
+      "sizes": { "0.3": 3.6, "0.5": 4.8 },
+      "in_stock": true
+    },
+    {
+      "name": "Sober Mermaid",
+      "category": "alcohol-free",
+      "style": "Alcohol-free Pilsner",
+      "abv": 0.0,
+      "description": "Zero alcohol, full Pilsner taste.",
+      "sizes": { "0.3": 3.4, "0.5": 4.4 },
+      "in_stock": true
+    },
+    {
+      "name": "Apple Spritzer",
+      "category": "soft",
+      "style": "Apple juice and sparkling water",
+      "abv": 0.0,
+      "description": "The German classic, known locally as Apfelschorle.",
+      "sizes": { "0.3": 2.9, "0.5": 3.9 },
+      "in_stock": true
+    },
+    {
+      "name": "Homemade Lemonade",
+      "category": "soft",
+      "style": "Lemonade",
+      "abv": 0.0,
+      "description": "Lemon, mint and a little honey.",
+      "sizes": { "0.3": 3.2, "0.5": 4.2 },
+      "in_stock": true
+    },
+    {
+      "name": "Cola",
+      "category": "soft",
+      "style": "Cola",
+      "abv": 0.0,
+      "description": "Ice cold, with a slice of lemon.",
+      "sizes": { "0.3": 2.9, "0.5": 3.9 },
+      "in_stock": true
+    },
+    {
+      "name": "Havel Spirit",
+      "category": "spirit",
+      "style": "Herbal liqueur",
+      "abv": 32.0,
+      "description": "Our house herbal liqueur, served ice cold.",
+      "sizes": { "0.02": 3.5 },
+      "in_stock": true
+    }
+  ]
+}
