@@ -20,6 +20,7 @@ give it a tool, and then learn how to **evaluate** it.
 - [Part 1 — Download the workshop code](#part-1--download-the-workshop-code-do-this-before-the-workshop)
 - [Part 2 — One-time setup](#part-2--one-time-setup-do-this-before-the-workshop)
 - [Part 3 — During the workshop](#part-3--during-the-workshop)
+  - [Run evaluations](#run-evaluations)
 - [Troubleshooting](#troubleshooting)
 
 ---
@@ -419,6 +420,30 @@ adk web --port 8000
 
 Run this command from the workshop folder, which contains your `my_agent/` folder,
 then open <http://localhost:8000>.
+
+### Run evaluations
+
+An **evaluation** runs your agent on saved test conversations (an **eval set**)
+and scores how close its answers and tool calls come to the expected ones.
+
+From the workshop folder, with `(.venv)` showing, run this as **one line**:
+
+```bash
+adk eval my_agent my_agent/eval_set_1.evalset.json --config_file_path my_agent/test_config.json --print_detailed_results
+```
+
+What each part means:
+
+- `my_agent`: the agent to test.
+- `my_agent/eval_set_1.evalset.json`: the test conversations to run.
+- `--config_file_path my_agent/test_config.json`: the criteria and thresholds to use.
+- `--print_detailed_results`: shows the score for every criterion, for every case.
+  Leave it out to see only the pass/fail summary.
+
+Each case calls the Gemini model, so it can take a little while. At the end you see
+which eval cases **passed** and which **failed**, with their scores.
+
+> Getting `429` / `RESOURCE_EXHAUSTED`? See [T7](#t7-429--resource_exhausted--quota-errors).
 
 
 ---
