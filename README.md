@@ -454,7 +454,7 @@ Welcome to **The Unicorn & Parrot**, a pub in Potsdam. Its bartender, **Polly** 
 is a chatbot that takes drink orders. Polly has bugs. Your job is to find them and
 prove them with evals.
 
-**👉 The pub's page: <https://teamlida.github.io/atd-eval-ai-agents/>**
+**👉 The pub's page: <https://teamlida.github.io/atd-eval-ai-agents/challenge/>**
 
 The page has the menu, the house rules and the register's tools, plus a register you can try
 yourself. **The page is always right.** Whenever Polly says or does something that
