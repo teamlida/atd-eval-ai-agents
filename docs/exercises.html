@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Workshop Exercises</title>
+  <meta name="description"
+    content="Hands-on exercises of the Evaluating AI Agents workshop.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+  <style>
+    :root {
+      --bg: #f7f4ec;
+      --panel: #fffdf8;
+      --ink: #1f2a25;
+      --muted: #5c6a62;
+      --line: #ddd5c3;
+      --accent: #1d5c46;
+      --brass: #a87a23;
+      --code-bg: #efe9dc;
+      --note-bg: #eef5f0;
+      --note-line: #b7d4c3;
+      --warn-bg: #fbf1df;
+      --warn-line: #e5c48a;
+
+      --f-head: "Alegreya SC", Georgia, serif;
+      --f-body: "Alegreya Sans", "Segoe UI", system-ui, sans-serif;
+      --f-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+      color-scheme: light;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0f1d18;
+        --panel: #15281f;
+        --ink: #eef0e6;
+        --muted: #a7b3a8;
+        --line: #2f4a3f;
+        --accent: #8fcf8a;
+        --brass: #d1a650;
+        --code-bg: #0b1612;
+        --note-bg: #173a2e;
+        --note-line: #2f5a48;
+        --warn-bg: #2e2716;
+        --warn-line: #6b5520;
+        color-scheme: dark;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #0f1d18;
+      --panel: #15281f;
+      --ink: #eef0e6;
+      --muted: #a7b3a8;
+      --line: #2f4a3f;
+      --accent: #8fcf8a;
+      --brass: #d1a650;
+      --code-bg: #0b1612;
+      --note-bg: #173a2e;
+      --note-line: #2f5a48;
+      --warn-bg: #2e2716;
+      --warn-line: #6b5520;
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 400 1.0625rem/1.6 var(--f-body);
+    }
+
+    main {
+      max-width: 50rem;
+      margin: 0 auto;
+      padding: 2.5rem 16px 4rem;
+    }
+
+    h1, h2, h3 { font-family: var(--f-head); font-weight: 700; line-height: 1.2; }
+
+    h1 { font-size: clamp(2rem, 6vw, 2.8rem); margin: 0 0 .25rem; }
+
+    .kicker {
+      font-family: var(--f-head);
+      color: var(--brass);
+      letter-spacing: .06em;
+      margin: 0;
+    }
+
+    .lede { font-size: 1.15rem; color: var(--muted); margin-top: .75rem; }
+
+    a { color: var(--accent); text-underline-offset: 2px; }
+
+    code {
+      font-family: var(--f-mono);
+      font-size: .88em;
+      background: var(--code-bg);
+      padding: .1em .35em;
+      border-radius: 4px;
+      overflow-wrap: anywhere;
+    }
+
+    pre {
+      position: relative;
+      background: var(--code-bg);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: .9rem 1rem;
+      overflow-x: auto;
+      font-size: .85rem;
+      line-height: 1.5;
+    }
+
+    pre code { background: none; padding: 0; font-size: inherit; overflow-wrap: normal; }
+
+    .copy {
+      position: absolute;
+      top: .4rem;
+      right: .4rem;
+      font: 500 .75rem var(--f-body);
+      background: var(--panel);
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: .15rem .5rem;
+      cursor: pointer;
+    }
+
+    .copy:hover { color: var(--ink); }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      justify-content: space-between;
+      align-items: center;
+      margin: 2rem 0 1rem;
+    }
+
+    .toolbar h2 { margin: 0; font-size: 1.5rem; }
+
+    .btn {
+      font: 500 .9rem var(--f-body);
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: .3rem .75rem;
+      cursor: pointer;
+    }
+
+    .btn:hover { border-color: var(--accent); }
+
+    details.ex {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      margin: 0 0 1rem;
+    }
+
+    details.ex>summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 1rem 1.25rem;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: .25rem 1rem;
+      align-items: center;
+    }
+
+    details.ex>summary::-webkit-details-marker { display: none; }
+
+    .num {
+      font: 700 1.6rem var(--f-head);
+      color: var(--brass);
+      width: 2.2rem;
+      text-align: center;
+    }
+
+    .sum-title { font: 700 1.25rem/1.25 var(--f-head); }
+
+    .sum-sub { display: block; font: 400 .95rem var(--f-body); color: var(--muted); }
+
+    .chev {
+      width: .7rem;
+      height: .7rem;
+      border-right: 2px solid var(--muted);
+      border-bottom: 2px solid var(--muted);
+      transform: rotate(45deg);
+      transition: transform .15s;
+      margin-right: .25rem;
+    }
+
+    details.ex[open] .chev { transform: rotate(225deg); }
+
+    .body { padding: 0 1.25rem 1.25rem; border-top: 1px solid var(--line); }
+
+    .body h3 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; color: var(--accent); }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem .6rem;
+      margin: 1rem 0 0;
+      padding: 0;
+      list-style: none;
+      font-size: .9rem;
+    }
+
+    .meta li {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: .1rem .7rem;
+      color: var(--muted);
+    }
+
+    .meta b { color: var(--ink); font-weight: 500; }
+
+    ol.questions { padding-left: 1.4rem; }
+
+    ol.questions li { margin: .35rem 0; }
+
+    .q {
+      font-family: var(--f-mono);
+      font-size: .92rem;
+      background: var(--code-bg);
+      padding: .1em .45em;
+      border-radius: 4px;
+    }
+
+    .note, .warn {
+      border-left: 4px solid var(--note-line);
+      background: var(--note-bg);
+      padding: .75rem 1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1rem 0;
+    }
+
+    .warn { border-color: var(--warn-line); background: var(--warn-bg); }
+
+    .note p, .warn p { margin: .25rem 0; }
+
+    .debrief { border-top: 1px dashed var(--line); margin-top: 1.5rem; }
+
+    .debrief ul { padding-left: 1.2rem; }
+
+    table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+
+    th, td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+
+    th { font-family: var(--f-head); font-weight: 500; color: var(--muted); }
+
+    .table-wrap { overflow-x: auto; }
+
+    footer { margin-top: 3rem; color: var(--muted); font-size: .9rem; }
+  </style>
+</head>
+
+<body>
+  <main>
+    <p class="kicker">Evaluating AI Agents · Workshop</p>
+    <h1>Exercises</h1>
+    <p class="lede">
+      Hands-on exercises for the workshop. Each one builds on the last.
+    </p>
+
+    <div class="note">
+      <p><b>Before you start:</b> finish Parts&nbsp;0–2 of the
+        <a href="https://github.com/teamlida/atd-eval-ai-agents#readme">setup guide</a>
+        (Python, the <code>.venv</code>, Google ADK and your Gemini API key in <code>my_agent/.env</code>).
+        Run every command from the workshop folder, with <code>(.venv)</code> at the start of the prompt.</p>
+      <p>Stuck or behind? Every exercise starts from a branch with the finished code from the step before, so
+        <code>git checkout -f &lt;branch&gt;</code> always gets you back on track.</p>
+    </div>
+
+    <div class="toolbar">
+      <h2>The exercises</h2>
+      <button class="btn" id="toggle-all" type="button">Expand all</button>
+    </div>
+
+    <!-- ───────────── Exercise 1 ───────────── -->
+    <details class="ex" id="ex1">
+      <summary>
+        <span class="num">1</span>
+        <span class="sum-title">Talk to the agent, watch the tools</span>
+        <span class="chev" aria-hidden="true"></span>
+      </summary>
+      <div class="body">
+        <ul class="meta">
+          <li>Branch <b><code>agent-with-tool</code></b></li>
+          <li>Agent <b><code>my_agent</code></b></li>
+        </ul>
+
+        <p><code>my_agent</code> has one tool, <code>get_user_data(user_id)</code>, which fetches a user's
+          profile from a mock API.</p>
+
+        <h3>Set up</h3>
+        <pre><code>git checkout -f agent-with-tool
+adk web --port 8000</code></pre>
+        <p>Open <a href="http://localhost:8000">http://localhost:8000</a> and pick <b><code>my_agent</code></b>
+          in the top-left dropdown.</p>
+
+        <h3>Do it</h3>
+        <p>In <b>one session</b>, ask these three questions in this order:</p>
+        <ol class="questions">
+          <li><span class="q">tell me the name of user 1</span></li>
+          <li><span class="q">tell me what is the favorite drink of user 1</span></li>
+          <li><span class="q">tell me what is the favorite drink of user 2</span></li>
+        </ol>
+        <p>After each answer, click the events on the left of <code>adk web</code>. For every turn, note:</p>
+        <ul>
+          <li>Did the agent call <code>get_user_data</code>? With which <code>user_id</code>?</li>
+          <li>What did the tool return, and does the answer match it?</li>
+        </ul>
+
+        <div class="debrief">
+          <h3>Debrief</h3>
+          <ul>
+            <li>What did you see for each question?</li>
+            <li>What surprised you?</li>
+            <li>What would you want to test in this agent?</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <!-- ───────────── Exercise 2 ───────────── -->
+    <details class="ex" id="ex2">
+      <summary>
+        <span class="num">2</span>
+        <span class="sum-title">Write your first evals</span>
+        <span class="chev" aria-hidden="true"></span>
+      </summary>
+      <div class="body">
+        <ul class="meta">
+          <li>Branch <b><code>agent-with-tool</code></b> or <b><code>eval-agent</code></b></li>
+          <li>Agent <b><code>my_agent</code></b></li>
+        </ul>
+
+        <p>Now turn what you saw in Exercise&nbsp;1 into evals for the first two questions. An <b>eval</b>
+          replays a saved conversation against the agent and scores the result against <b>criteria</b>
+          set in a config file.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Eval</th>
+                <th>Question</th>
+                <th>Criterion</th>
+                <th>Checks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>A</b> · deterministic</td>
+                <td><span class="q">tell me the name of user 1</span></td>
+                <td><code>tool_trajectory_avg_score</code></td>
+                <td>The agent called <code>get_user_data</code> with <code>user_id</code> = <code>"1"</code>. Exact
+                  match, no judge.</td>
+              </tr>
+              <tr>
+                <td><b>B</b> · non-deterministic</td>
+                <td><span class="q">tell me what is the favorite drink of user 1</span></td>
+                <td><code>rubric_based_final_response_quality_v1</code></td>
+                <td>An LLM judge checks that the answer contains the user's name.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>1 · Record the conversations</h3>
+        <ol>
+          <li>Start <code>adk web --port 8000</code> and pick <code>my_agent</code>.</li>
+          <li>Open the <b>Eval</b> tab and create an eval set, for example <code>my_evals</code>.</li>
+          <li>Start a <b>new session</b>, ask question&nbsp;A, then click <b>Add current session</b> to
+            <code>my_evals</code>.</li>
+          <li>Start <b>another new session</b>, ask question&nbsp;B, and add it too.</li>
+        </ol>
+        <p>ADK saves both cases to <code>my_agent/my_evals.evalset.json</code>. Open it in VS Code and find each
+          case's <code>eval_id</code>, its <code>final_response</code> and its <code>function_call</code>
+          entries.</p>
+        <div class="warn">
+          <p>⚠️ <b>A recorded case expects exactly what the agent did that time.</b> Check that the
+            <code>function_call</code> in case&nbsp;A is really <code>get_user_data</code> with
+            <code>{"user_id": "1"}</code>. If it isn't, fix it to what the agent <i>should</i> have called.</p>
+        </div>
+
+        <h3>2 · Eval A: tool trajectory</h3>
+        <p>Create <code>my_agent/trajectory_config.json</code>:</p>
+        <pre><code>{ "criteria": { "tool_trajectory_avg_score": 1.0 } }</code></pre>
+        <p>Run only case&nbsp;A by adding <code>:</code> and its <code>eval_id</code> to the file name:</p>
+        <pre><code>adk eval my_agent my_agent/my_evals.evalset.json:&lt;eval_id&gt; --config_file_path my_agent/trajectory_config.json --print_detailed_results</code></pre>
+
+        <h3>3 · Eval B: rubric</h3>
+        <p>Create <code>my_agent/rubric_config.json</code>:</p>
+        <pre><code>{
+  "criteria": {
+    "rubric_based_final_response_quality_v1": {
+      "threshold": 0.8,
+      "judge_model_options": { "judge_model": "gemini-3.5-flash-lite", "num_samples": 1 },
+      "rubrics": [
+        {
+          "rubric_id": "contains_user_name",
+          "rubric_content": { "text_property": "The response contains the name of the user." }
+        }
+      ]
+    }
+  }
+}</code></pre>
+        <pre><code>adk eval my_agent my_agent/my_evals.evalset.json:&lt;eval_id&gt; --config_file_path my_agent/rubric_config.json --print_detailed_results</code></pre>
+
+        <div class="note">
+          <p>Behind or stuck? <code>git checkout -f eval-agent</code> has a finished eval set
+            (<code>my_agent/eval_set_1.evalset.json</code>) and config (<code>my_agent/test_config.json</code>).</p>
+        </div>
+
+        <div class="debrief">
+          <h3>Debrief</h3>
+          <ul>
+            <li>What did your evals show?</li>
+            <li>What surprised you?</li>
+            <li>When would you use a deterministic check, and when an LLM judge?</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <!-- ───────────── Exercise 3 ───────────── -->
+    <details class="ex" id="ex3">
+      <summary>
+        <span class="num">3</span>
+        <span class="sum-title">Bug hunt at The Unicorn &amp; Parrot 🍺</span>
+        <span class="chev" aria-hidden="true"></span>
+      </summary>
+      <div class="body">
+        <ul class="meta">
+          <li>Branch <b><code>challenge</code></b></li>
+          <li>Agent <b><code>beer_agent</code></b></li>
+        </ul>
+
+        <p><b>The Unicorn &amp; Parrot</b> is a pub in Potsdam. Its bartender, <b>Polly</b> the parrot, is a
+          chatbot that answers questions about drinks and takes orders. Polly has bugs.</p>
+
+        <h3>1 · Explore the oracle</h3>
+        <p>Start with the pub's page:
+          <a href="./"><b>teamlida.github.io/atd-eval-ai-agents</b></a>.
+          It has the menu, the house rules, the register's tools, and a register you can try yourself.</p>
+        <div class="note">
+          <p><b>The page is the oracle. It is always right.</b> Whenever Polly says or does something that
+            doesn't match the page, you've found a bug.</p>
+        </div>
+
+        <h3>2 · Switch to the challenge branch</h3>
+        <pre><code>git checkout -f challenge</code></pre>
+        <p>Give Polly your API key by copying the <code>.env</code> you made for <code>my_agent</code>:</p>
+        <pre><code>cp my_agent/.env beer_agent/.env</code></pre>
+        <p>On Windows (PowerShell): <code>Copy-Item my_agent\.env beer_agent\.env</code></p>
+        <p>Start <code>adk web --port 8000</code> and pick <b><code>beer_agent</code></b> in the dropdown.</p>
+
+        <h3>3 · Hunt</h3>
+        <p>Chat with Polly and compare what it says and does with the page. The events on the left of
+          <code>adk web</code> show which tools Polly called, with which inputs, and what the register answered.</p>
+
+        <h3>4 · Prove it with evals</h3>
+        <p>Find <b>at least 4 bugs</b> and cover <b>each one with an eval that fails</b>:</p>
+        <ul>
+          <li><b>2 deterministic</b> evals: <code>tool_trajectory_avg_score</code> or
+            <code>response_match_score</code>.</li>
+          <li><b>2 non-deterministic</b> evals: <code>rubric_based_final_response_quality_v1</code>, with a house
+            rule in your own words as the rubric.</li>
+        </ul>
+        <p>Use the same workflow as Exercise&nbsp;2, with <code>beer_agent</code> in place of
+          <code>my_agent</code>. After recording a case, <b>correct its expectation</b> to what Polly
+          <i>should</i> have done.</p>
+        <pre><code>adk eval beer_agent beer_agent/test.evalset.json:&lt;eval_id&gt; --config_file_path beer_agent/trajectory_config.json --print_detailed_results</code></pre>
+        <div class="warn">
+          <p>An eval that catches a bug <b>fails</b>. That's the goal.</p>
+        </div>
+        <p>💡 Free API keys allow about 15 requests per minute. If you hit <code>429</code>, wait a minute: that's a
+          quota, not a bug.</p>
+        <p>The step-by-step version, with config templates, is in the
+          <a href="https://github.com/teamlida/atd-eval-ai-agents/tree/challenge#challenge-the-unicorn--parrot-">README
+            on the <code>challenge</code> branch</a>.</p>
+
+        <div class="debrief">
+          <h3>Debrief</h3>
+          <ul>
+            <li>Which bugs did you find, and which kind of eval caught each one?</li>
+            <li>Which bugs were hard to turn into an eval? Why?</li>
+            <li>What surprised you?</li>
+            <li>What would you put in a regression suite for Polly?</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <footer>
+      Evaluating AI Agents workshop ·
+      <a href="https://github.com/teamlida/atd-eval-ai-agents">Repository &amp; setup guide</a> ·
+      <a href="./">The Unicorn &amp; Parrot</a>
+    </footer>
+  </main>
+
+  <script>
+    // Copy buttons on code blocks
+    document.querySelectorAll("pre").forEach(function (pre) {
+      var btn = document.createElement("button");
+      btn.className = "copy";
+      btn.type = "button";
+      btn.textContent = "Copy";
+      btn.addEventListener("click", function () {
+        var text = pre.querySelector("code").innerText;
+        navigator.clipboard.writeText(text).then(function () {
+          btn.textContent = "Copied";
+          setTimeout(function () { btn.textContent = "Copy"; }, 1500);
+        }).catch(function () { btn.textContent = "Select & copy"; });
+      });
+      pre.appendChild(btn);
+    });
+
+    // Expand / collapse all
+    var all = document.querySelectorAll("details.ex");
+    var toggle = document.getElementById("toggle-all");
+    function sync() {
+      var anyClosed = Array.prototype.some.call(all, function (d) { return !d.open; });
+      toggle.textContent = anyClosed ? "Expand all" : "Collapse all";
+    }
+    toggle.addEventListener("click", function () {
+      var open = toggle.textContent === "Expand all";
+      all.forEach(function (d) { d.open = open; });
+      sync();
+    });
+    all.forEach(function (d) { d.addEventListener("toggle", sync); });
+
+    // Open the exercise named in the URL, e.g. exercises.html#ex2
+    function openFromHash() {
+      var d = location.hash && document.querySelector(location.hash);
+      if (d && d.tagName === "DETAILS") { d.open = true; d.scrollIntoView(); }
+    }
+    window.addEventListener("hashchange", openFromHash);
+    openFromHash();
+    sync();
+  </script>
+</body>
+
+</html>
