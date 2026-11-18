@@ -1,8 +1,19 @@
+import os
+
 from google.adk.agents.llm_agent import Agent
+from google.adk.models.lite_llm import LiteLlm
 
 from .register import DRINKS, MENU, apply_discount, check_stock, list_menu, place_order, verify_age
 
 PUB = MENU["pub"]
+
+# Which model? "gemini" by default. For the local backup, set AGENT_MODEL=local in .env,
+# or change "gemini" to "local" on the last line. Local needs: ollama pull gemma4:e2b
+MODELS = {
+    "gemini": "gemini-3.5-flash-lite",
+    "local": LiteLlm(model="ollama_chat/gemma4:e2b", think=False),
+}
+MODEL = MODELS[os.getenv("AGENT_MODEL", "gemini")]
 DRINK_NAMES = ", ".join(d["name"] for d in DRINKS)
 
 INSTRUCTION = f"""
@@ -34,7 +45,7 @@ How you work:
 """
 
 root_agent = Agent(
-    model="gemini-3.5-flash-lite",
+    model=MODEL,
     name="root_agent",
     description=f"{PUB['bartender']}, the bartender at {PUB['name']}: answers questions about drinks and takes orders.",
     instruction=INSTRUCTION,

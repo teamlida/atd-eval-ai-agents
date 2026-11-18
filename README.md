@@ -610,6 +610,7 @@ You forgot the `-f`. Run the command again as `git checkout -f <branch-name>`.
 ### T7. `429` / `RESOURCE_EXHAUSTED` / quota errors
 
 You've hit the free-tier rate limit. Wait a minute and try again.
+If it keeps happening, switch to the local model: see [T12](#t12-gemini-isnt-working-switch-to-the-local-model-backup).
 
 ### T8. `address already in use` / port 8000 is busy
 
@@ -634,3 +635,54 @@ Only if your environment is really broken: delete it and repeat Part 2, steps 2.
 - Windows: `Remove-Item -Recurse -Force .venv`
 
 Your `my_agent` folder and API key are not affected.
+
+### T12. Gemini isn't working: switch to the local model (backup)
+
+If the Gemini API is down, or your key keeps hitting its quota, you can run the agent on
+a **local model** instead: Gemma 4, through Ollama. It runs on your own laptop, so there's
+no API key and no quota. Answers are slower (around 10 seconds per message), and you need
+about 8 GB of free disk space.
+
+**1. Install Ollama** (once):
+
+- **macOS / Windows:** download it from <https://ollama.com/download>, install it and open it.
+- **Linux:** `curl -fsSL https://ollama.com/install.sh | sh`
+
+**2. Download the model.** It's about 7.5 GB, so do this on good Wi-Fi:
+
+```bash
+ollama pull gemma4:e2b
+```
+
+To check it, run `ollama show gemma4:e2b`: the list under **Capabilities** should include `tools`.
+
+**3. Switch the agent.** The agents on the workshop branches have a built-in switch. Add this
+line to the agent's `.env` file (`my_agent/.env`, or `beer_agent/.env` in the challenge):
+
+```
+AGENT_MODEL=local
+```
+
+Then stop `adk web` with **Ctrl+C** and start it again. To go back to Gemini, delete the line.
+
+> Created `my_agent` yourself with `adk create`? Then your `agent.py` has no switch. Add this
+> import at the top:
+> ```python
+> from google.adk.models.lite_llm import LiteLlm
+> ```
+> and replace the `model='gemini-3.5-flash-lite',` line with:
+> ```python
+> model=LiteLlm(model="ollama_chat/gemma4:e2b", think=False),
+> ```
+
+**4. Evals with an LLM judge** use their own model, set in the config file, not by the switch.
+Set the judge to the local model:
+
+```json
+"judge_model": "ollama_chat/gemma4:e2b"
+```
+
+On the `eval-agent` and `challenge` branches, `my_agent/test_config_local.json` already has it.
+
+> The local model is much smaller than Gemini, so it makes different mistakes. That's fine
+> for learning, but don't compare its results with a table that uses Gemini.
